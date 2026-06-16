@@ -129,4 +129,52 @@ test("Navegate through the left panel", async ({ page }) => {
             console.log('De vuelta en el dashboard, continuando el recorrido...')
         }
     }
+
+})
+
+//Test 4: Ingresar a OrangeHRM y validar que al ingresar a cada una de las opciones del menu superior de la opcion Organization se ingresa 
+// correctamente a cada sección y validar su URL de cada sección
+test("Check al the Organization Links", async ({ page }) => {
+        
+    const expectedPages = [
+        {
+            name: 'General Information',
+            url: '/web/index.php/admin/viewOrganizationGeneralInformation'
+        },
+        {
+            name: 'Locations',
+            url: '/web/index.php/admin/viewLocations'
+        },
+        {
+            name: 'Structure',
+            url: '/web/index.php/admin/viewCompanyStructure'
+        },
+    ]
+               
+    // Login
+    await page.goto('https://opensource-demo.orangehrmlive.com/')
+    await page.getByRole('textbox', { name: 'Username' }).fill('Admin')
+    await page.getByRole('textbox', { name: 'Password' }).fill('admin123')
+    await page.getByRole('button', { name: 'Login' }).click()
+
+    // Hacer clic en la opción "Admin" del menú lateral
+    await expect(page.getByRole('link', { name: 'Admin' })).toBeVisible()
+    await page.getByRole('link', { name: 'Admin' }).click()
+
+        const OrganizationOptions = page.getByRole('menu').locator('li')
+
+    for (let expectedPage of expectedPages) {
+
+        // Abrir el menú desplegable "Organization"
+        await page.getByRole('navigation', { name: 'Topbar menu' }).getByText('Organization').click()
+
+        // Hacer clic en la opción específica (General Information, Locations, Structure)
+        const menuOption = OrganizationOptions.filter({ hasText: expectedPage.name })
+        await menuOption.click()
+
+        // Validar que la URL corresponde a esa sección
+        await expect(page).toHaveURL(new RegExp(expectedPage.url))
+        console.log(`Ingresó correctamente a: ${expectedPage.name} con URL: ${expectedPage.url}`)
+    }
+
 })
