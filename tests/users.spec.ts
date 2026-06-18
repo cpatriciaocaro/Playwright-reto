@@ -25,7 +25,6 @@ async function obtenerValorAleatorioDeColumna(
   return valores[indiceAleatorio];
 }
 
-// 👇 La movimos aquí, a nivel de módulo, junto a la otra función
 function escapeRegExp(texto: string): string {
   return texto.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
@@ -110,8 +109,13 @@ test('Select specific user for edition', async ({ page }) => {
   // Navegamos por XPath: del label "Username" subimos al padre,
   // saltamos al div hermano siguiente, y ahí está el input.
   const usernameInput = page.locator("//label[contains(., 'Username')]/parent::div/following-sibling::div/input")
+  
+  // Espera (con auto-retry) a que el input tenga el valor esperado
+  await expect(usernameInput).toHaveValue(userForEdition)
+
+  // Recién acá leemos el valor para loguearlo, porque ya sabemos que está cargado
   const usernameEnFormulario = await usernameInput.inputValue()
 
-  console.log('Username en el formulario de edición:', usernameEnFormulario)
-  expect(usernameEnFormulario).toBe(userForEdition)
+    console.log('Usuario mostrado en el formulario:', usernameEnFormulario)
+
 })
