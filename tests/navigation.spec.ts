@@ -1,12 +1,11 @@
 import { test, expect } from "@playwright/test";
+import { LoginPage } from "../pageobjects/LoginPage";
 
 //Test 1:Navegar Menu Options: Ingresar a OrangeHRM y validar que las opciones del menu lateral izquierdo sean las esperadas
 test("navegacion menu options", async ({ page }) => {
     //Login
-    await page.goto('https://opensource-demo.orangehrmlive.com/')
-    await page.getByRole('textbox', { name: 'Username' }).fill('Admin')
-    await page.getByRole('textbox', { name: 'Password' }).fill('admin123')
-    await page.getByRole('button', { name: 'Login' }).click()
+    const loginPage = new LoginPage(page)
+    await loginPage.login('Admin', 'admin123')
 
     await expect(page.getByRole('link', { name: 'Admin' })).toBeVisible()
 
@@ -51,10 +50,8 @@ test("navegacion menu options", async ({ page }) => {
 
 test("Validar que la primera opcion del menu es Admin", async ({ page }) => {
     // Login
-    await page.goto('https://opensource-demo.orangehrmlive.com/')
-    await page.getByRole('textbox', { name: 'Username' }).fill('Admin')
-    await page.getByRole('textbox', { name: 'Password' }).fill('admin123')
-    await page.getByRole('button', { name: 'Login' }).click()
+    const loginPage = new LoginPage(page)
+    await loginPage.login('Admin', 'admin123')
 
     // Obtener el primer item del menu lateral
     const firstMenuItem = page.getByLabel('Sidepanel').getByRole('listitem').first()
@@ -69,10 +66,8 @@ test("Validar que la primera opcion del menu es Admin", async ({ page }) => {
 
 test("Validar que la primera opcion del menu NO es PIM", async ({ page }) => {
     // Login
-    await page.goto('https://opensource-demo.orangehrmlive.com/')
-    await page.getByRole('textbox', { name: 'Username' }).fill('Admin')
-    await page.getByRole('textbox', { name: 'Password' }).fill('admin123')
-    await page.getByRole('button', { name: 'Login' }).click()
+    const loginPage = new LoginPage(page)
+    await loginPage.login('Admin', 'admin123')
 
     // Obtener el primer item del menu lateral
     const firstMenuItem = page.getByLabel('Sidepanel').getByRole('listitem').first()
@@ -91,10 +86,8 @@ test("Navegate through the left panel", async ({ page }) => {
     test.setTimeout(120000) // 120 segundos para dar tiempo a recorrer todo el menú
 
     // Login
-    await page.goto('https://opensource-demo.orangehrmlive.com/')
-    await page.getByRole('textbox', { name: 'Username' }).fill('Admin')
-    await page.getByRole('textbox', { name: 'Password' }).fill('admin123')
-    await page.getByRole('button', { name: 'Login' }).click()
+     const loginPage = new LoginPage(page)
+     await loginPage.login('Admin', 'admin123')
 
     await expect(page.getByRole('link', { name: 'Admin' })).toBeVisible()
 
@@ -152,10 +145,8 @@ test("Check al the Organization Links", async ({ page }) => {
     ]
                
     // Login
-    await page.goto('https://opensource-demo.orangehrmlive.com/')
-    await page.getByRole('textbox', { name: 'Username' }).fill('Admin')
-    await page.getByRole('textbox', { name: 'Password' }).fill('admin123')
-    await page.getByRole('button', { name: 'Login' }).click()
+    const loginPage = new LoginPage(page)
+    await loginPage.login('Admin', 'admin123')
 
     // Hacer clic en la opción "Admin" del menú lateral
     await expect(page.getByRole('link', { name: 'Admin' })).toBeVisible()

@@ -1,4 +1,5 @@
 import { test, expect, Page, Locator } from '@playwright/test';
+import { LoginPage } from '../pageobjects/LoginPage';
 
 /**
  * Selecciona un valor aleatorio de una columna de una tabla, excluyendo "Admin".
@@ -32,11 +33,9 @@ function escapeRegExp(texto: string): string {
 //Obtener los datos registrados en la columna Employee Name de la tabla de usuarios. 
 test('Get all the usernames registered nth 3', async ({ page }) => {
 
-    await page.goto('https://opensource-demo.orangehrmlive.com/')
-    await page.getByRole('textbox', { name: 'Username' }).fill('Admin')
-    await page.getByRole('textbox', { name: 'Password' }).fill('admin123')
-    await page.getByRole('button', { name: 'Login' }).click()
-
+    const loginPage = new LoginPage(page)
+    await loginPage.login('Admin', 'admin123')
+    
     await expect(page.getByRole('link', { name: 'Admin' })).toBeVisible()
 
     await page.getByRole('link', { name: 'Admin' }).click()
@@ -65,10 +64,9 @@ test('Get all the usernames registered nth 3', async ({ page }) => {
 
 test('Select specific user for edition', async ({ page }) => {
   // --- Login ---
-  await page.goto('https://opensource-demo.orangehrmlive.com/')
-  await page.getByRole('textbox', { name: 'Username' }).fill('Admin')
-  await page.getByRole('textbox', { name: 'Password' }).fill('admin123')
-  await page.getByRole('button', { name: 'Login' }).click()
+  const loginPage = new LoginPage(page)
+  await loginPage.login('Admin', 'admin123')
+
   await expect(page.getByRole('link', { name: 'Admin' })).toBeVisible()
 
   // --- Navegación hacia Users ---
