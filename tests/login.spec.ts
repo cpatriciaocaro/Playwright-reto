@@ -1,4 +1,5 @@
 import {expect, test} from '@playwright/test'
+import { LoginPage } from "../pageobjects/LoginPage";
 
         // Describe para agrupar todos los casos de prueba relacionados con el login
 test.describe('Login OrangeHRM', () => {
@@ -8,18 +9,15 @@ test.describe('Login OrangeHRM', () => {
   });
     
   test("Login exito", async ({page}) => {
-        await page.getByRole('textbox', {name: 'Username'}).fill('Admin')
-        await page.getByRole('textbox', {name: 'Password'}).fill('admin123')
-        await page.getByRole('button', {name: 'Login'}).click()
+        const loginPage = new LoginPage(page)
+        await loginPage.login('Admin', 'admin123')
 
-        await page.waitForURL('https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index')
         await expect(page).toHaveURL(/dashboard/);
   });
 
     test("Login fallido", async ({page}) => {
-        await page.getByRole('textbox', {name: 'Username'}).fill('Admin')
-        await page.getByRole('textbox', {name: 'Password'}).fill('admin0123')
-        await page.getByRole('button', {name: 'Login'}).click()
+        const loginPage = new LoginPage(page)
+        await loginPage.login('Admin', 'admin0123')
 
         // Validamos que aparezca el mensaje de error
         const errorMessage = page.locator('.oxd-alert-content-text');
@@ -31,8 +29,8 @@ test.describe('Login OrangeHRM', () => {
   });
   
     test("Login sin password", async ({page}) => {
-        await page.getByRole('textbox', {name: 'Username'}).fill('Admin')
-        await page.getByRole('button', {name: 'Login'}).click()
+        const loginPage = new LoginPage(page)
+        await loginPage.login('Admin', '')
 
         // Validamos que aparezca el mensaje "Required" bajo el campo Password
         const requiredMessage = page
